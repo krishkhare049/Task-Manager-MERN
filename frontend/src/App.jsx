@@ -3,7 +3,8 @@ import { FcTodoList } from "react-icons/fc";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { IoAddCircleSharp } from "react-icons/io5";
+import { MdOutlineMenuOpen } from "react-icons/md";
+// import { IoAddCircleSharp } from "react-icons/io5";
 import { MdOutlineAdd } from "react-icons/md";
 
 import { FiCheck } from "react-icons/fi";
@@ -14,28 +15,99 @@ import Swal from "sweetalert2";
 import Checkbox from "react-custom-checkbox";
 import moment from "moment";
 
+import Cookies from 'js-cookie';
+
+// Import Swiper React components
+// import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+// import 'swiper/css';
+
 import "./App.css";
+import axios from "axios";
+import Login from "./components/Login";
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [name, setName] = useState(true);
   const [Todo, setTodo] = useState("");
   const [Tasks, setTasks] = useState([]);
 
   let taskDate = useRef();
 
+  const token = Cookies.get('ki_todo_cookie');
+
+  // console.log('Retrieved cookie:', token);
+  // console.log(document.cookie.ki_todo_cookie)
+  let AUTH_TOKEN = 'Bearer ' + token
+  // console.log(AUTH_TOKEN)
+  axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
   // const inputbox = useRef('');
 
+  const getTasks = () => {
+    axios
+      .get("http://localhost:5000/myAllTasks")
+      .then((response) => {
+        console.log(response.data);
+
+        if (response.data !== "log_in_to_access_data") {
+          setTasks(response.data.tasks);
+        } else {
+          setLoggedIn(false);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const saveTasks = () => {
+    axios
+      .post("http://localhost:5000/editTasks", {
+        tasks: Tasks,
+      })
+      .then((response) => {
+        if (response.data === "updated_tasks") {
+        } else if (response.data === "log_in_to_access_data") {
+          setLoggedIn(false);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   useEffect(() => {
-    let ls_tasks = localStorage.getItem("tasks");
-
-    if (ls_tasks) {
-      let parsed_tasks = JSON.parse(ls_tasks);
-      // console.log(parsed_tasks);
-
-      setTasks(parsed_tasks);
+    if (loggedIn === true) {
+      saveTasks();
     }
+  }, [Tasks]);
 
-    // return () => {
-    //   second
+  useEffect(() => {
+    // let ls_tasks = localStorage.getItem("tasks");
+
+    // if (ls_tasks) {
+    //   let parsed_tasks = JSON.parse(ls_tasks);
+    //   // console.log(parsed_tasks);
+
+    //   setTasks(parsed_tasks);
+    // }
+
+    // if (localStorage.getItem("token"))
+
+    axios
+      .get("http://localhost:5000/user", {})
+      .then((response) => {
+        console.log(response.data);
+
+        if (response.data !== "log_in_to_access_data") {
+          setLoggedIn(true);
+          setName(response.data.name);
+          getTasks();
+          console.log(Tasks);
+        } else {
+          setLoggedIn(false);
+        }
+        // setTasks(response.data.tasks);
+      })
+      .catch((error) => console.log(error));
+
     // }
   }, []);
 
@@ -69,7 +141,7 @@ function App() {
     setTodo("");
     // saveToLocalStorage(Tasks);
     // I am giving here different parameter because react does not updates state immediately so it is not getting saved as setState is asynchronous.
-    saveToLocalStorage(newTasks);
+    // saveToLocalStorage(newTasks);
     taskDate.current.value = "";
   };
 
@@ -123,7 +195,7 @@ function App() {
 
     // Set state function is not working because it is asynchronous so use callback inside. or use useEffect but it will render many times each time state changes. Depends if useState and its dependency array is not changing many times.
     // I am giving here different parameter because react does not updates state immediately so it is not getting saved as setState is asynchronous.
-    saveToLocalStorage(newTodos);
+    // saveToLocalStorage(newTodos);
   };
 
   // const handleSetDate = (e) => {
@@ -164,7 +236,7 @@ function App() {
 
         setTasks(newTodos);
         // I am giving here different parameter because react does not updates state immediately so it is not getting saved as setState is asynchronous.
-        saveToLocalStorage(newTodos);
+        // saveToLocalStorage(newTodos);
       }
     });
   };
@@ -183,7 +255,7 @@ function App() {
     newTasks[t_ind].isFinished = !newTasks[t_ind].isFinished;
     // console.log(newTasks);
     setTasks(newTasks);
-    saveToLocalStorage(newTasks);
+    // saveToLocalStorage(newTasks);
   };
 
   const clearText = () => {
@@ -196,12 +268,31 @@ function App() {
     localStorage.setItem("tasks", JSON.stringify(data));
   };
 
+  if (loggedIn === false) {
+    return (
+      <>
+        <Login />
+      </>
+    );
+  }
+  else{
+
   return (
     <>
-      <div className="flex justify-evenly items-center w-40 p-2 m-2 bg-slate-200 rounded-lg">
-        <FcTodoList className="w-9 h-9" />
-        <span className="text-3xl text-black font-bold">ToDo</span>
+    <div className="flex items-center justify-between">
+
+      <div className="flex justify-evenly items-center w-56 p-2 m-2 bg-white rounded-lg">
+        <FcTodoList className="w-10 h-10" />
+        <span className="text-xl text-black font-bold">
+          {/* Tasks Manager: {name !== "" ? name : ""} */}
+          Tasks Manager
+        </span>
       </div>
+      <div className="flex justify-evenly items-center p-2 m-2 bg-white rounded-full active:bg-slate-100">
+        <MdOutlineMenuOpen className="w-10 h-10" />
+      </div>
+    </div>
+
       {/* <MdOutlineModeEdit />
       <MdOutlineDeleteOutline />
       <IoIosCloseCircleOutline />
@@ -340,7 +431,6 @@ function App() {
                   onChange={toggleFinished}
                   checked={item.isFinished}
                 /> */}
-                
 
                 <div className="flex justify-evenly items-center">
                   <button
@@ -378,6 +468,7 @@ function App() {
       </div>
     </>
   );
+}
 }
 
 export default App;

@@ -20,7 +20,7 @@ import axios from "axios";
 
 import Swal from 'sweetalert2'
 
-export default function Login() {
+export default function Login({setLog}) {
   //   const swiper = useSwiper();
   const [swiper, setSwiper] = useState(null);
 
@@ -50,9 +50,10 @@ export default function Login() {
           setLoginEmail('')
           setLoginPassword('')
         }
-        // else{
-        //     localStorage.setItem('token', response.data)
-        // }
+        else{
+            // localStorage.setItem('token', response.data)
+            setLog(true)
+        }
       })
       .catch((error) => console.log(error));
   };
@@ -76,20 +77,21 @@ export default function Login() {
             // confirmButtonText: 'Cool'
           })
         }
-        // else{
-        //     localStorage.setItem('token', response.data)
-        // }
+        else{
+            // localStorage.setItem('token', response.data)
+            setLog(true)
+        }
       })
       .catch((error) => console.log(error));
   };
 
   return (
     <>
-      <div className="flex justify-evenly items-center w-60 p-2 m-2 bg-white rounded-lg">
+      <div className="flex justify-evenly items-center w-60 p-2 m-2 bg-white rounded-lg shadow-md">
         <FcTodoList className="w-10 h-10" />
         <span className="text-2xl text-black font-bold">Tasks Manager</span>
       </div>
-      <div className="log_sign">
+      <div className="log_sign shadow-md">
         <Swiper
           // install Swiper modules
           modules={[Navigation, Pagination, Scrollbar, A11y]}

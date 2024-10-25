@@ -208,6 +208,12 @@ form {
   border-color: #e6e6e6;
 }
 
+.logOutdiv{
+  position: absolute;
+  top: 10;
+  right: 10;
+}
+
 @media (max-width:600px) {
 
   .log_sign {

@@ -3,7 +3,7 @@ import { FcTodoList } from "react-icons/fc";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { MdOutlineMenuOpen } from "react-icons/md";
+// import { MdOutlineMenuOpen } from "react-icons/md";
 // import { IoAddCircleSharp } from "react-icons/io5";
 import { MdOutlineAdd } from "react-icons/md";
 
@@ -28,7 +28,8 @@ import axios from "axios";
 import Login from "./components/Login";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  // const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(null);
   const [name, setName] = useState(true);
   const [Todo, setTodo] = useState("");
   const [Tasks, setTasks] = useState([]);
@@ -100,7 +101,7 @@ function App() {
 
         if (response.data !== "log_in_to_access_data") {
           setLoggedIn(true);
-          setName(response.data.name);
+          setUsername(response.data.full_name);
           getTasks();
           console.log(Tasks);
         } else {
@@ -111,7 +112,7 @@ function App() {
       .catch((error) => console.log(error));
 
     // }
-  }, []);
+  }, [loggedIn]);
 
   const inputChange = (e) => {
     setTodo(e.target.value);
@@ -271,33 +272,72 @@ function App() {
   };
 
   const handleLogOut = () => {
-    setLoggedIn(false);
-    Cookies.remove("ki_todo_cookie");
+    Swal.fire({
+      title: "Do you want to log out?",
+      // showDenyButton: true,
+      
+      showCancelButton: true,
+      confirmButtonText: "Log Out",
+      // denyButtonText: `Don't save`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        setLoggedIn(false);
+        Cookies.remove("ki_todo_cookie");
+      }
+      // else if (result.isDenied) {
+      //   Swal.fire("Changes are not saved", "", "info");
+      // }
+    });
   };
 
-  if (loggedIn === false) {
-    return (
+  if(loggedIn === null){
+    return(
       <>
-        <Login />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <div className="flex items-center justify-between">
-          <div className="flex justify-evenly items-center w-56 p-2 m-2 bg-white rounded-lg">
+        <div className="flex justify-center items-center h-[100vh] w-full">
+        <div className="flex justify-evenly items-center w-56 h-56 p-2 m-2 bg-white rounded-lg shadow-md">
             <FcTodoList className="w-10 h-10" />
             <span className="text-xl text-black font-bold">
               {/* Tasks Manager: {name !== "" ? name : ""} */}
               Tasks Manager
             </span>
           </div>
-          <div className="flex justify-evenly items-center p-2 m-2 bg-white rounded-full active:bg-slate-100">
-            <MdOutlineMenuOpen className="w-10 h-10" />
+        </div>
+      </>
+    )
+  }
+
+  if (loggedIn === false) {
+    return (
+      <>
+        <Login setLog={setLoggedIn} />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className="flex items-center justify-between">
+          <div className="flex justify-evenly items-center w-56 p-2 m-2 bg-white rounded-lg shadow-md">
+            <FcTodoList className="w-10 h-10" />
+            <span className="text-xl text-black font-bold">
+              {/* Tasks Manager: {name !== "" ? name : ""} */}
+              Tasks Manager
+            </span>
+          </div>
+          <div className="flex justify-evenly items-center p-2 m-2 bg-white rounded-lg shadow-md">
+            <p className="p-2">Hi {username !== "" ? username : ""}</p>
+
+            {/* <MdOutlineMenuOpen className="w-10 h-10" /> */}
+            <button
+              className="flex justify-center items-center rounded-md p-2 bg-red-500 shadow-md w-20 active:bg-red-600"
+              onClick={handleLogOut}
+            >
+              <span className="text-white font-bold">Log out</span>
+            </button>
           </div>
         </div>
 
-        <div className="flex flex-col justify-center items-center rounded-md p-2 bg-white shadow-md w-40">
+        {/* <div className="flex flex-col justify-center items-center rounded-md p-2 bg-white shadow-md w-40 logOutdiv">
           <p className="p-2">Hi {username !== "" ? username : ""}</p>
 
           <button
@@ -306,7 +346,7 @@ function App() {
           >
             <span className="text-white font-bold">Log out</span>
           </button>
-        </div>
+        </div> */}
 
         {/* <MdOutlineModeEdit />
       <MdOutlineDeleteOutline />
@@ -314,7 +354,7 @@ function App() {
       <IoAddCircleSharp />
       <MdOutlineAdd /> */}
 
-        <div className="mx-auto flex justify-center items-center bg-white md:w-4/5 rounded p-2 flex-col border-b-4 border-b-black">
+        <div className="mx-auto flex justify-center items-center bg-white md:w-4/5 rounded p-2 flex-col border-b-4 border-b-black shadow-md">
           <div>
             <div className="flex flex-row justify-center items-center flex-wrap">
               <label
@@ -387,7 +427,7 @@ function App() {
           </div>
         </div>
 
-        <div className="container min-h-40 flex-col mx-auto my-2 flex justify-center items-center bg-white md:w-4/5 rounded p-2 mt-2">
+        <div className="container shadow-md min-h-40 flex-col mx-auto my-2 flex justify-center items-center bg-white md:w-4/5 rounded p-2 mt-2">
           {Tasks.length === 0 && <div>Add tasks</div>}
           {Tasks.length !== 0 && (
             <div className="text-blue-400 font-bold">Tasks</div>

@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
 import Checkbox from "react-custom-checkbox";
 import moment from "moment";
 
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 // Import Swiper React components
 // import { Swiper, SwiperSlide } from 'swiper/react';
@@ -33,15 +33,17 @@ function App() {
   const [Todo, setTodo] = useState("");
   const [Tasks, setTasks] = useState([]);
 
+  const [username, setUsername] = useState([]);
+
   let taskDate = useRef();
 
-  const token = Cookies.get('ki_todo_cookie');
+  const token = Cookies.get("ki_todo_cookie");
 
   // console.log('Retrieved cookie:', token);
   // console.log(document.cookie.ki_todo_cookie)
-  let AUTH_TOKEN = 'Bearer ' + token
+  let AUTH_TOKEN = "Bearer " + token;
   // console.log(AUTH_TOKEN)
-  axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+  axios.defaults.headers.common["Authorization"] = AUTH_TOKEN;
   // const inputbox = useRef('');
 
   const getTasks = () => {
@@ -268,162 +270,175 @@ function App() {
     localStorage.setItem("tasks", JSON.stringify(data));
   };
 
+  const handleLogOut = () => {
+    setLoggedIn(false);
+    Cookies.remove("ki_todo_cookie");
+  };
+
   if (loggedIn === false) {
     return (
       <>
         <Login />
       </>
     );
-  }
-  else{
+  } else {
+    return (
+      <>
+        <div className="flex items-center justify-between">
+          <div className="flex justify-evenly items-center w-56 p-2 m-2 bg-white rounded-lg">
+            <FcTodoList className="w-10 h-10" />
+            <span className="text-xl text-black font-bold">
+              {/* Tasks Manager: {name !== "" ? name : ""} */}
+              Tasks Manager
+            </span>
+          </div>
+          <div className="flex justify-evenly items-center p-2 m-2 bg-white rounded-full active:bg-slate-100">
+            <MdOutlineMenuOpen className="w-10 h-10" />
+          </div>
+        </div>
 
-  return (
-    <>
-    <div className="flex items-center justify-between">
+        <div className="flex flex-col justify-center items-center rounded-md p-2 bg-white shadow-md w-40">
+          <p className="p-2">Hi {username !== "" ? username : ""}</p>
 
-      <div className="flex justify-evenly items-center w-56 p-2 m-2 bg-white rounded-lg">
-        <FcTodoList className="w-10 h-10" />
-        <span className="text-xl text-black font-bold">
-          {/* Tasks Manager: {name !== "" ? name : ""} */}
-          Tasks Manager
-        </span>
-      </div>
-      <div className="flex justify-evenly items-center p-2 m-2 bg-white rounded-full active:bg-slate-100">
-        <MdOutlineMenuOpen className="w-10 h-10" />
-      </div>
-    </div>
+          <button
+            className="flex justify-center items-center rounded-md p-2 bg-red-500 shadow-md w-20 active:bg-red-600"
+            onClick={handleLogOut}
+          >
+            <span className="text-white font-bold">Log out</span>
+          </button>
+        </div>
 
-      {/* <MdOutlineModeEdit />
+        {/* <MdOutlineModeEdit />
       <MdOutlineDeleteOutline />
       <IoIosCloseCircleOutline />
       <IoAddCircleSharp />
       <MdOutlineAdd /> */}
 
-      <div className="mx-auto flex justify-center items-center bg-white md:w-4/5 rounded p-2 flex-col border-b-4 border-b-black">
-        <div>
-          <div className="flex flex-row justify-center items-center flex-wrap">
-            <label
-              htmlFor="inputtask"
-              className="font-bold p-2 bg-slate-500 text-white rounded-md"
-            >
-              Add task
-            </label>
-            <input
-              type="text"
-              name=""
-              id="inputtask"
-              value={Todo}
-              onChange={inputChange}
-              // ref={inputbox}
-              placeholder="tasks..."
-              className="p-2 m-2 rounded-md outline-none bg-slate-50 focus:bg-slate-100 disabled:bg-slate-800"
-            />
-            {Todo.length > 4 && (
-              <button
-                onClick={clearText}
-                className="p-2 m-2 rounded-md outline-none bg-slate-50"
+        <div className="mx-auto flex justify-center items-center bg-white md:w-4/5 rounded p-2 flex-col border-b-4 border-b-black">
+          <div>
+            <div className="flex flex-row justify-center items-center flex-wrap">
+              <label
+                htmlFor="inputtask"
+                className="font-bold p-2 bg-slate-500 text-white rounded-md"
               >
-                <IoIosCloseCircleOutline className="w-8 h-8" />
-              </button>
-            )}
-
-            <button
-              className="flex justify-evenly items-center w-20 bg-slate-50 border-2 border-slate-50 rounded-md p-1 disabled:text-slate-400"
-              onClick={addTask}
-              disabled={Todo.length < 4}
-            >
-              <MdOutlineAdd className="w-6 h-6" />
-              Add
-            </button>
-          </div>
-
-          <div className="flex justify-center items-center flex-wrap">
-            <label htmlFor="taskdate">Add Date</label>
-            <input
-              ref={taskDate}
-              type="date"
-              name=""
-              id="taskdate"
-              // onChange={handleSetDate}
-              className="p-2 m-2 rounded-md outline-none bg-slate-50 focus:bg-slate-100 disabled:bg-slate-800"
-            />
-          </div>
-        </div>
-        <div className="m-2 flex justify-evenly items-center flex-wrap md:w-4/6 w-full">
-          <span className="font-bold p-2 rounded-xl bg-opacity-10 bg-violet-600 text-violet-600">
-            Total: {Tasks.length}
-          </span>
-          <span className="font-bold p-2 rounded-xl bg-opacity-10 bg-red-600 text-red-600">
-            Pending:
-            {
-              Tasks.filter((t) => {
-                return t.isFinished == false;
-              }).length
-            }
-          </span>
-          <span className="font-bold p-2 rounded-xl bg-opacity-10 bg-green-600 text-green-600">
-            Finished:
-            {
-              Tasks.filter((t) => {
-                return t.isFinished == true;
-              }).length
-            }
-          </span>
-        </div>
-      </div>
-
-      <div className="container min-h-40 flex-col mx-auto my-2 flex justify-center items-center bg-white md:w-4/5 rounded p-2 mt-2">
-        {Tasks.length === 0 && <div>Add tasks</div>}
-        {Tasks.length !== 0 && (
-          <div className="text-blue-400 font-bold">Tasks</div>
-        )}
-        {Tasks.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="task flex justify-start items-center border-t-2 w-full"
-            >
-              {/* <span className="bg-gray-100 rounded p-3 my-2"> */}
-
-              <div className="w-2/3 flex justify-start items-center flex-wrap">
-                <span
-                  className={
-                    item.isFinished
-                      ? "line-through bg-green-500 text-white rounded p-3 m-2 font-bold"
-                      : "bg-gray-100 rounded p-3 m-2 font-bold"
-                  }
+                Add task
+              </label>
+              <input
+                type="text"
+                name=""
+                id="inputtask"
+                value={Todo}
+                onChange={inputChange}
+                // ref={inputbox}
+                placeholder="tasks..."
+                className="p-2 m-2 rounded-md outline-none bg-slate-50 focus:bg-slate-100 disabled:bg-slate-800"
+              />
+              {Todo.length > 4 && (
+                <button
+                  onClick={clearText}
+                  className="p-2 m-2 rounded-md outline-none bg-slate-50"
                 >
-                  {item.Todo}
-                </span>
-              </div>
+                  <IoIosCloseCircleOutline className="w-8 h-8" />
+                </button>
+              )}
 
-              <div className="btns flex justify-evenly items-center flex-wrap ml-2 w-1/3 m-2">
-                {/*  */}
-                <Checkbox
-                  onChange={(e) => toggleFinished(e, item.id)}
-                  checked={item.isFinished}
-                  icon={
-                    <div
-                      style={{
-                        display: "flex",
-                        flex: 1,
-                        backgroundColor: "#5ce65c",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <FiCheck color="black" size={23} />
-                    </div>
-                  }
-                  borderColor="#5ce65c"
-                  // borderWidth={0}
-                  borderRadius={20}
-                  style={{ overflow: "hidden" }}
-                  size={25}
-                  label="Finished?"
-                />
-                {/*  */}
+              <button
+                className="flex justify-evenly items-center w-20 bg-slate-50 border-2 border-slate-50 rounded-md p-1 disabled:text-slate-400"
+                onClick={addTask}
+                disabled={Todo.length < 4}
+              >
+                <MdOutlineAdd className="w-6 h-6" />
+                Add
+              </button>
+            </div>
 
-                {/* <input
+            <div className="flex justify-center items-center flex-wrap">
+              <label htmlFor="taskdate">Add Date</label>
+              <input
+                ref={taskDate}
+                type="date"
+                name=""
+                id="taskdate"
+                // onChange={handleSetDate}
+                className="p-2 m-2 rounded-md outline-none bg-slate-50 focus:bg-slate-100 disabled:bg-slate-800"
+              />
+            </div>
+          </div>
+          <div className="m-2 flex justify-evenly items-center flex-wrap md:w-4/6 w-full">
+            <span className="font-bold p-2 rounded-xl bg-opacity-10 bg-violet-600 text-violet-600">
+              Total: {Tasks.length}
+            </span>
+            <span className="font-bold p-2 rounded-xl bg-opacity-10 bg-red-600 text-red-600">
+              Pending:
+              {
+                Tasks.filter((t) => {
+                  return t.isFinished == false;
+                }).length
+              }
+            </span>
+            <span className="font-bold p-2 rounded-xl bg-opacity-10 bg-green-600 text-green-600">
+              Finished:
+              {
+                Tasks.filter((t) => {
+                  return t.isFinished == true;
+                }).length
+              }
+            </span>
+          </div>
+        </div>
+
+        <div className="container min-h-40 flex-col mx-auto my-2 flex justify-center items-center bg-white md:w-4/5 rounded p-2 mt-2">
+          {Tasks.length === 0 && <div>Add tasks</div>}
+          {Tasks.length !== 0 && (
+            <div className="text-blue-400 font-bold">Tasks</div>
+          )}
+          {Tasks.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="task flex justify-start items-center border-t-2 w-full"
+              >
+                {/* <span className="bg-gray-100 rounded p-3 my-2"> */}
+
+                <div className="w-2/3 flex justify-start items-center flex-wrap">
+                  <span
+                    className={
+                      item.isFinished
+                        ? "line-through bg-green-500 text-white rounded p-3 m-2 font-bold"
+                        : "bg-gray-100 rounded p-3 m-2 font-bold"
+                    }
+                  >
+                    {item.Todo}
+                  </span>
+                </div>
+
+                <div className="btns flex justify-evenly items-center flex-wrap ml-2 w-1/3 m-2">
+                  {/*  */}
+                  <Checkbox
+                    onChange={(e) => toggleFinished(e, item.id)}
+                    checked={item.isFinished}
+                    icon={
+                      <div
+                        style={{
+                          display: "flex",
+                          flex: 1,
+                          backgroundColor: "#5ce65c",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <FiCheck color="black" size={23} />
+                      </div>
+                    }
+                    borderColor="#5ce65c"
+                    // borderWidth={0}
+                    borderRadius={20}
+                    style={{ overflow: "hidden" }}
+                    size={25}
+                    label="Finished?"
+                  />
+                  {/*  */}
+
+                  {/* <input
                   type="checkbox"
                   name={item.id}
                   id=""
@@ -432,43 +447,43 @@ function App() {
                   checked={item.isFinished}
                 /> */}
 
-                <div className="flex justify-evenly items-center">
-                  <button
-                    onClick={(e) => editTask(e, item.id)}
-                    className="flex justify-evenly items-center p-2 m-2 bg-slate-100 rounded"
-                  >
-                    <MdOutlineModeEdit className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={(e) => deleteTask(e, item.id)}
-                    className="flex justify-evenly items-center p-2 m-2 bg-slate-100 rounded"
-                  >
-                    <MdOutlineDeleteOutline className="w-6 h-6" />
-                  </button>
-                </div>
+                  <div className="flex justify-evenly items-center">
+                    <button
+                      onClick={(e) => editTask(e, item.id)}
+                      className="flex justify-evenly items-center p-2 m-2 bg-slate-100 rounded"
+                    >
+                      <MdOutlineModeEdit className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={(e) => deleteTask(e, item.id)}
+                      className="flex justify-evenly items-center p-2 m-2 bg-slate-100 rounded"
+                    >
+                      <MdOutlineDeleteOutline className="w-6 h-6" />
+                    </button>
+                  </div>
 
-                {item.isDate && (
-                  // <span className="bg-blue-600 text-white p-2 rounded-md">
-                  <span
-                    className={
-                      checkIfDeadlineFinished(item.isDate)
-                        ? "bg-gray-100 text-red-600 line-through p-2 rounded-md text-xs text-center"
-                        : "bg-blue-600 text-white p-2 rounded-md m-2 text-xs text-center"
-                    }
-                  >
-                    {/* {item.isDate} */}
-                    {/* {checkIfDeadlineFinished(item.isDate) ? {}} */}
-                    {formatDate(item.isDate)}
-                  </span>
-                )}
+                  {item.isDate && (
+                    // <span className="bg-blue-600 text-white p-2 rounded-md">
+                    <span
+                      className={
+                        checkIfDeadlineFinished(item.isDate)
+                          ? "bg-gray-100 text-red-600 line-through p-2 rounded-md text-xs text-center"
+                          : "bg-blue-600 text-white p-2 rounded-md m-2 text-xs text-center"
+                      }
+                    >
+                      {/* {item.isDate} */}
+                      {/* {checkIfDeadlineFinished(item.isDate) ? {}} */}
+                      {formatDate(item.isDate)}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-}
+            );
+          })}
+        </div>
+      </>
+    );
+  }
 }
 
 export default App;

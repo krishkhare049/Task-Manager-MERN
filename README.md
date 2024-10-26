@@ -1,4 +1,6 @@
-# Task Manager using MERN Stack and Typescript
+Checkout MERN stack Todo app at https://todoapp-mern.vercel.app/
+
+# Task Manager using MERN Stack
 
 This project is built by using-
 

@@ -1,0 +1,252 @@
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+} */
+
+
+@font-face {
+  font-family: "novasquare";
+  src: url("./fonts/NovaSquare-Regular.ttf");
+}
+
+* {
+  user-select: none;
+  scroll-behavior: smooth;
+}
+
+html {
+  -ms-overflow-style: none;
+  /* for Internet Explorer, Edge */
+  scrollbar-width: none;
+  /* for Firefox */
+  overflow-y: scroll;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  /* for Chrome, Safari, and Opera */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: 16px;
+  text-align: center;
+  /* font-weight: 600; */
+  /* font-family: 'Segoe UI'; */
+  font-family: "novasquare", sans-serif;
+  /* background-color: #8ec5fc; */
+  /* background: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%); */
+  background-image: linear-gradient(62deg, #8ec5fc6b 0%, #e0c3fc93 100%), url('./assets/desktop-wallpaper-login-page-login.jpg');
+  /* background-position: center; */
+  /* background-size: cover; */
+  height: 100vh;
+  width: 100vw;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* .light {
+  background-color: white;
+  color: black;
+}
+.dark {
+  background-color: black;
+  color: white;
+} */
+
+h1{
+  margin: 0px;
+  margin-top: 20px;
+}
+
+hr{
+  width: 20px;
+}
+
+.log_sign {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 100px;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+}
+
+.form_sec {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  width: 80%;
+  max-width: 500px;
+  margin: auto;
+  /* height: 300px; */
+  background: white;
+  border-radius: 10px;
+  padding: 10px 10px 30px 10px;
+  transition: height 500ms;
+}
+
+.input_elem {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 7px;
+  width: 80%;
+  height: 45px;
+  margin: 5px;
+  background: whitesmoke;
+  max-width: 260px;
+  border: 2px solid whitesmoke;
+}
+
+.input_elem img {
+  width: 20px;
+  height: 20px;
+  
+}
+
+.btn_sec {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 80%;
+  font-size: 20px;
+  margin-top: 30px;
+  font-family: novasquare, sans-serif;
+
+}
+
+input {
+  /* padding: 4px 10px; */
+  /* border-radius: 7px; */
+  width: 80%;
+  height: 30px;
+  /* margin: 5px;
+  background: whitesmoke;
+  max-width: 200px;
+  border: 2px solid whitesmoke; */
+  background: transparent;
+  border: none;
+}
+
+input:focus {
+  /* background: rgb(226, 226, 226); */
+  /* border: 2px solid whitesmoke; */
+  outline: none;
+}
+
+.submit_btn {
+  font-size: 20px;
+  font-family: novasquare, sans-serif;
+  padding: 5px 10px;
+  background-image: linear-gradient(62deg, #6ab4ff 0%, #8507ff 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.submit_btn:active {
+  scale: 0.9;
+}
+
+.disable_btn {
+  font-size: 20px;
+  font-family: novasquare, sans-serif;
+  padding: 5px 10px;
+  background-image: whitesmoke;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  color: gray;
+}
+
+.disable_btn:active {
+  scale: 0.9;
+}
+
+form {
+  width: 100%;
+}
+
+.input_elem:has(input:focus){
+  background: #e6e6e6;
+  border-color: #e6e6e6;
+}
+
+.logOutdiv{
+  position: absolute;
+  top: 10;
+  right: 10;
+}
+
+@media (max-width:600px) {
+
+  .log_sign {
+      min-width: 280px;
+      width: 95%;
+  }
+
+  .input_elem{
+      width: 95%;
+  }
+
+  .input_elem img {
+      width: 15px;
+      height: 15px;
+  }
+
+  .btn_sec {
+      width: 100%;
+  }
+
+  .submit_btn {
+      font-size: 14px;
+  }
+
+  .disable_btn {
+      font-size: 12px;
+  }
+
+}

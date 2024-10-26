@@ -59,9 +59,22 @@ module.exports = function (app) {
                 // console.log(`Token is : ${token}`);
 
                 // Setting cookie-
-                return res.cookie("ki_todo_cookie", token, {
-                    // httpOnly: true // To make sure that user will not be able to change, remove or client-side scripting on cookie.
-                }).status(200).json('signed_up_successfully')
+                res.cookie('ki_todo_cookie', token, {
+
+                    expires: new Date(Date.now() + 31104000), // Expires in 1 year
+
+                    // I need js access so commenting I am commenting this-
+                    // httpOnly: true, // Prevents JavaScript access
+
+                    // secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+
+                    // For this we need to set secure: true
+                    // sameSite: 'none' // Required for cross-origin cookies
+
+                    // So we are using Lax-
+                    sameSite: 'Lax' // Use 'Lax' or 'Strict' for local development
+
+                }).status(200).json('signed_in_successfully');
 
                 // res.json({ token });
                 // res.send('signed_up_successfully')

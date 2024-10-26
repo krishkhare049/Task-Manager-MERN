@@ -1,11 +1,9 @@
-Checkout MERN stack Todo app at https://todoapp-mern.vercel.app/
-
-# Task Manager using MERN Stack
+# Task Manager using MERN Stack and Typescript
 
 This project is built by using-
 
 # Frontend-
-React
+React with Typescript
 axios
 swal2
 js-cookie
